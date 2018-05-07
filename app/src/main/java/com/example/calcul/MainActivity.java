@@ -19,16 +19,6 @@ public class MainActivity extends AppCompatActivity {
     boolean flagBrackers = false;
     String exampleStr = new String();
 
-//    public Map<String, Integer> MAIN_MATH_OPERATIONS;
-//
-//     {
-//        MAIN_MATH_OPERATIONS = new HashMap<String, Integer>();
-//        MAIN_MATH_OPERATIONS.put("*", 1);
-//        MAIN_MATH_OPERATIONS.put("/", 1);
-//        MAIN_MATH_OPERATIONS.put("+", 2);
-//        MAIN_MATH_OPERATIONS.put("-", 2);
-//    }
-
     private ExpressionParser2 expressionParser = null;
     private TextView textView =null;
 
@@ -36,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        expressionParser =new ExpressionParser( MAIN_MATH_OPERATIONS );
         expressionParser = new ExpressionParser2();
         this.textView = ((TextView) findViewById(R.id.textviev));
     }
