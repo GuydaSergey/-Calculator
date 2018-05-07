@@ -1,5 +1,6 @@
 package com.example.calcul;
 
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -7,47 +8,107 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.HashMap;
-import java.util.Map;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class MainActivity extends AppCompatActivity {
 
-    boolean flag = true;
-    public Map<String, Integer> MAIN_MATH_OPERATIONS;
+    List<String> example = new ArrayList<String>();
+    boolean flagBrackers = false;
+    String exampleStr = new String();
 
-     {
-        MAIN_MATH_OPERATIONS = new HashMap<String, Integer>();
-        MAIN_MATH_OPERATIONS.put("*", 1);
-        MAIN_MATH_OPERATIONS.put("/", 1);
-        MAIN_MATH_OPERATIONS.put("+", 2);
-        MAIN_MATH_OPERATIONS.put("-", 2);
-    }
+//    public Map<String, Integer> MAIN_MATH_OPERATIONS;
+//
+//     {
+//        MAIN_MATH_OPERATIONS = new HashMap<String, Integer>();
+//        MAIN_MATH_OPERATIONS.put("*", 1);
+//        MAIN_MATH_OPERATIONS.put("/", 1);
+//        MAIN_MATH_OPERATIONS.put("+", 2);
+//        MAIN_MATH_OPERATIONS.put("-", 2);
+//    }
 
-    private ExpressionParser expressionParser = null;
+    private ExpressionParser2 expressionParser = null;
+    private TextView textView =null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        expressionParser =new ExpressionParser( MAIN_MATH_OPERATIONS );
+//        expressionParser =new ExpressionParser( MAIN_MATH_OPERATIONS );
+        expressionParser = new ExpressionParser2();
+        this.textView = ((TextView) findViewById(R.id.textviev));
     }
 
     public void onClick(View view) {
-        ((TextView) findViewById(R.id.textviev)).setText(this.expressionParser.calculateExpression((( TextView )findViewById(R.id.textviev)).getText().toString()).toString());
-        flag=true;
+        if(!exampleStr.equals(""))
+        {
+            this.example.add(exampleStr);
+            exampleStr="";
+        }
+        Double ex= this.expressionParser.calculate(this.example.listIterator());
+        onClickC(view);
+        this.example.add(ex.toString());
+        PrintText(ex.toString());
     }
 
     public void onClick2(View view) {
-        if(flag){
-            onClickC(view);
+        String str = ((Button)view).getText().toString();
+        if(!this.expressionParser.isOperator(str)) {
+           this.exampleStr+=str;
+            PrintText(exampleStr);
+        }else {
+            PrintText(str);
+            if(!exampleStr.equals("")) {
+                this.example.add(this.exampleStr);
+            }
+            this.example.add(str);
+            this.exampleStr="";
         }
-        TextView tv = (TextView)findViewById(R.id.textviev);
-        String str= tv.getText().toString()+((Button)view).getText();
-        tv.setText(str);
-        flag=false;
     }
 
     public void onClickC(View view) {
-        ((TextView)findViewById(R.id.textviev)).setText("");
+        PrintText("");
+        this.example.clear();
     }
+
+    public void onClickBrackets(View view) {
+        if(!exampleStr.equals("")) {
+            this.example.add(this.exampleStr);
+        }
+        if (flagBrackers) {
+            if (this.expressionParser.isNumber(this.textView.getText().toString())) {
+                this.example.add(")");
+                flagBrackers = false;
+            }
+            } else if (this.expressionParser.isOperator(this.textView.getText().toString())) {
+                this.example.add("(");
+                flagBrackers = true;
+            }
+            PrintText(this.example.get(example.size() - 1));
+    }
+
+
+
+    public void onClickC2(View view) {
+        if(!exampleStr.equals(""))
+        {
+            this.example.add(exampleStr);
+            exampleStr="";
+        }
+        if(!this.example.isEmpty())
+        {
+            this.example.remove(this.example.size() - 1);
+            if(!this.example.isEmpty())
+                PrintText(this.example.get(example.size() - 1));
+            else
+                PrintText("");
+        }
+    }
+
+    private void PrintText(String str) {
+       this.textView.setText(str);
+    }
+
 }
